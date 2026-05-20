@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="112" viewBox="0 0 80 112">
+  <!-- Card background -->
+  <rect width="80" height="112" rx="8" ry="8" fill="white" stroke="#cccccc" stroke-width="1.5"/>
+  
+  <!-- Top-left corner -->
+  <text x="5" y="13" font-size="10" fill="#c0392b" font-family="Georgia,serif" font-weight="bold" text-anchor="middle">7</text>
+  <text x="5" y="22" font-size="10" fill="#c0392b" font-family="Georgia,serif" text-anchor="middle">♥</text>
+  <!-- Bottom-right corner (rotated 180°) -->
+  <text x="75" y="99" font-size="10" fill="#c0392b" font-family="Georgia,serif" font-weight="bold" text-anchor="middle" transform="rotate(180,75,96)">7</text>
+  <text x="75" y="108" font-size="10" fill="#c0392b" font-family="Georgia,serif" text-anchor="middle" transform="rotate(180,75,105)">♥</text>
+
+  <text x="20.0" y="27.3" font-size="14" fill="#c0392b" font-family="Georgia,serif" text-anchor="middle">♥</text>
+  <text x="60.0" y="27.3" font-size="14" fill="#c0392b" font-family="Georgia,serif" text-anchor="middle">♥</text>
+  <text x="40.0" y="46.3" font-size="14" fill="#c0392b" font-family="Georgia,serif" text-anchor="middle">♥</text>
+  <text x="20.0" y="66.5" font-size="14" fill="#c0392b" font-family="Georgia,serif" text-anchor="middle" transform="rotate(180,20.0,61.6)">♥</text>
+  <text x="60.0" y="66.5" font-size="14" fill="#c0392b" font-family="Georgia,serif" text-anchor="middle" transform="rotate(180,60.0,61.6)">♥</text>
+  <text x="20.0" y="88.9" font-size="14" fill="#c0392b" font-family="Georgia,serif" text-anchor="middle" transform="rotate(180,20.0,84.0)">♥</text>
+  <text x="60.0" y="88.9" font-size="14" fill="#c0392b" font-family="Georgia,serif" text-anchor="middle" transform="rotate(180,60.0,84.0)">♥</text>
+</svg>

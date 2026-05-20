@@ -1,0 +1,536 @@
+/* ============================================================
+   style.css — Klondike Solitaire
+   Classic Windows-inspired green felt table aesthetic
+   ============================================================ */
+
+/* ---------- CSS Custom Properties (Design Tokens) ---------- */
+:root {
+  --felt-green: #2d6a4f;         /* Main table surface */
+  --felt-dark:  #1b4332;         /* Darker felt for depth */
+  --felt-light: #40916c;         /* Lighter felt highlight */
+  --toolbar-bg: #1a1a2e;         /* Deep navy toolbar */
+  --toolbar-border: #16213e;
+  --accent-gold: #f4a261;        /* Gold accent for buttons */
+  --accent-gold-hover: #e76f51;
+  --card-bg: #ffffff;            /* Card face */
+  --card-radius: 8px;
+  --card-width: 80px;
+  --card-height: 112px;
+  --card-shadow: 0 2px 8px rgba(0,0,0,0.45);
+  --pile-slot-border: rgba(255,255,255,0.18);
+  --red: #c0392b;
+  --black: #1a1a1a;
+  --font-ui: 'Georgia', 'Times New Roman', serif;
+  --transition-fast: 0.15s ease;
+  --transition-med:  0.25s ease;
+}
+
+/* ---------- Reset & Base ---------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* The game fits the viewport */
+}
+
+body {
+  font-family: var(--font-ui);
+  background: var(--felt-dark);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  user-select: none; /* Prevent text selection while dragging */
+}
+
+/* ============================================================
+   TOOLBAR
+   ============================================================ */
+#toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--toolbar-bg);
+  border-bottom: 2px solid var(--toolbar-border);
+  padding: 8px 16px;
+  height: 56px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  z-index: 100;
+}
+
+#game-title {
+  font-size: 1.4rem;
+  letter-spacing: 3px;
+  color: var(--accent-gold);
+  text-shadow: 0 0 20px rgba(244,162,97,0.4);
+  font-style: italic;
+}
+
+#toolbar-center {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.stat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 64px;
+}
+
+.stat-label {
+  font-size: 0.6rem;
+  letter-spacing: 2px;
+  color: #aaa;
+  font-style: normal;
+}
+
+.stat-value {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #fff;
+  letter-spacing: 1px;
+  font-style: normal;
+}
+
+#toolbar-right {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* ---------- Toolbar Buttons ---------- */
+.toolbar-btn {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #ddd;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.toolbar-btn:hover {
+  background: rgba(255,255,255,0.16);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.toolbar-btn:active {
+  transform: translateY(0);
+}
+
+.toolbar-btn.primary {
+  background: var(--accent-gold);
+  border-color: var(--accent-gold-hover);
+  color: #1a1a1a;
+  font-weight: bold;
+}
+
+.toolbar-btn.primary:hover {
+  background: var(--accent-gold-hover);
+  color: #fff;
+}
+
+/* ============================================================
+   GAME BOARD
+   ============================================================ */
+#game-board {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 20px 10px;
+  gap: 16px;
+  /* Felt texture using CSS gradient */
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(64,145,108,0.3) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 80%, rgba(27,67,50,0.5) 0%, transparent 60%),
+    var(--felt-green);
+  background-attachment: fixed;
+  overflow: hidden;
+}
+
+/* ---------- Top Row: Stock + Waste + Foundations ---------- */
+#top-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+}
+
+#stock-area {
+  display: flex;
+  gap: 12px;
+  margin-right: auto; /* Push foundations to the right */
+}
+
+#foundation-area {
+  display: flex;
+  gap: 12px;
+}
+
+/* ---------- Tableau ---------- */
+#tableau-area {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  flex: 1;
+}
+
+/* ---------- Pile Slot (empty placeholder) ---------- */
+.pile-slot {
+  width: var(--card-width);
+  min-height: var(--card-height);
+  border: 2px dashed var(--pile-slot-border);
+  border-radius: var(--card-radius);
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* Foundation slots show their suit symbol */
+.pile-slot.foundation::before {
+  content: attr(data-suit);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: rgba(255,255,255,0.18);
+  pointer-events: none;
+}
+
+/* Stock slot shows a recycle icon when empty */
+#stock.empty::before {
+  content: '↺';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  color: rgba(255,255,255,0.25);
+  pointer-events: none;
+}
+
+/* Tableau column slots expand to fit their cards */
+.tableau-col {
+  min-height: var(--card-height);
+  /* Height grows with card stack via JS positioning */
+}
+
+/* Highlight valid drop zones */
+.pile-slot.drop-target {
+  border-color: rgba(244,162,97,0.8);
+  background: rgba(244,162,97,0.1);
+  box-shadow: 0 0 12px rgba(244,162,97,0.4);
+}
+
+/* ============================================================
+   CARDS
+   ============================================================ */
+.card {
+  width: var(--card-width);
+  height: var(--card-height);
+  border-radius: var(--card-radius);
+  position: absolute;
+  cursor: pointer;
+  box-shadow: var(--card-shadow);
+  transition: box-shadow var(--transition-fast);
+  /* 3D flip transform */
+  transform-style: preserve-3d;
+  transform-origin: center center;
+}
+
+/* Card hover lift effect (only for face-up, moveable cards) */
+.card.face-up:not(.dragging):hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+  transform: translateY(-2px);
+  z-index: 50;
+}
+
+/* Face-down card back */
+.card .card-back {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--card-radius);
+  background:
+    repeating-linear-gradient(
+      45deg,
+      #1a3a5c 0px,
+      #1a3a5c 4px,
+      #1e4776 4px,
+      #1e4776 8px
+    );
+  border: 3px solid #0f2340;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.card .card-back::after {
+  content: '🂠';
+  font-size: 2.5rem;
+  opacity: 0.15;
+}
+
+/* Face-up card */
+.card .card-face {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--card-radius);
+  background: var(--card-bg);
+  border: 1.5px solid #ddd;
+  display: none; /* Hidden until face-up */
+  position: relative;
+  overflow: hidden;
+}
+
+/* Show face when card is flipped */
+.card.face-up .card-face { display: block; }
+.card.face-up .card-back  { display: none; }
+
+/* Top-left rank+suit label */
+.card-corner-top {
+  position: absolute;
+  top: 5px;
+  left: 6px;
+  line-height: 1;
+  font-size: 0.85rem;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Bottom-right rank+suit label (rotated 180°) */
+.card-corner-bottom {
+  position: absolute;
+  bottom: 5px;
+  right: 6px;
+  line-height: 1;
+  font-size: 0.85rem;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: rotate(180deg);
+}
+
+/* Center suit symbol */
+.card-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}
+
+/* Red cards */
+.card.red .card-corner-top,
+.card.red .card-corner-bottom,
+.card.red .card-center {
+  color: var(--red);
+}
+
+/* Black cards */
+.card.black .card-corner-top,
+.card.black .card-corner-bottom,
+.card.black .card-center {
+  color: var(--black);
+}
+
+/* ---------- Hint highlight ---------- */
+.card.hint-source {
+  box-shadow: 0 0 0 3px #f4a261, 0 4px 16px rgba(244,162,97,0.6);
+  animation: hint-pulse 0.8s ease-in-out 3;
+}
+
+@keyframes hint-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px #f4a261, 0 4px 16px rgba(244,162,97,0.4); }
+  50%       { box-shadow: 0 0 0 5px #e76f51, 0 4px 24px rgba(231,111,81,0.7); }
+}
+
+/* ---------- Card flip animation ---------- */
+@keyframes flip-card {
+  0%   { transform: rotateY(0deg) scaleX(1); }
+  50%  { transform: rotateY(90deg) scaleX(0.1); }
+  100% { transform: rotateY(0deg) scaleX(1); }
+}
+
+.card.flipping {
+  animation: flip-card 0.3s ease-in-out forwards;
+  pointer-events: none;
+}
+
+/* ---------- Dragging state ---------- */
+.card.dragging {
+  opacity: 0.85;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.7);
+  z-index: 1000;
+  cursor: grabbing;
+  pointer-events: none; /* Let events pass through to the drop target */
+}
+
+/* Stack of dragged cards */
+#drag-ghost {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transform-origin: top left;
+}
+
+#drag-ghost .card {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  display: block;
+  margin-top: -92px; /* Overlap like a real stack */
+}
+
+#drag-ghost .card:first-child {
+  margin-top: 0;
+}
+
+/* ============================================================
+   WIN OVERLAY
+   ============================================================ */
+#win-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5000;
+  animation: fade-in 0.5s ease;
+}
+
+#win-overlay.hidden {
+  display: none;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+#win-box {
+  background: linear-gradient(135deg, #1b4332, #2d6a4f);
+  border: 2px solid var(--accent-gold);
+  border-radius: 16px;
+  padding: 40px 60px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 40px rgba(244,162,97,0.2);
+  animation: win-box-enter 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  z-index: 1;
+  position: relative;
+}
+
+@keyframes win-box-enter {
+  from { transform: scale(0.5) translateY(40px); opacity: 0; }
+  to   { transform: scale(1) translateY(0);       opacity: 1; }
+}
+
+#win-suits {
+  font-size: 2.5rem;
+  letter-spacing: 10px;
+  margin-bottom: 12px;
+  animation: suits-bounce 1s ease infinite alternate;
+}
+
+@keyframes suits-bounce {
+  from { transform: translateY(0);   }
+  to   { transform: translateY(-8px); }
+}
+
+#win-title {
+  font-size: 3rem;
+  color: var(--accent-gold);
+  letter-spacing: 4px;
+  text-shadow: 0 0 30px rgba(244,162,97,0.6);
+  margin-bottom: 12px;
+}
+
+#win-stats {
+  color: #aed9c7;
+  font-size: 1rem;
+  margin-bottom: 28px;
+  letter-spacing: 1px;
+}
+
+#win-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+/* ---------- Confetti ---------- */
+#confetti-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: -40px;
+  font-size: 1.4rem;
+  animation: confetti-fall linear forwards;
+}
+
+@keyframes confetti-fall {
+  0%   { transform: translateY(0)    rotate(0deg);   opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 0.3; }
+}
+
+/* ============================================================
+   SCROLLBAR (webkit)
+   ============================================================ */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--felt-dark); }
+::-webkit-scrollbar-thumb { background: var(--felt-light); border-radius: 3px; }
+
+/* ============================================================
+   RESPONSIVE SCALING
+   For smaller screens, scale everything down proportionally
+   ============================================================ */
+@media (max-width: 780px) {
+  :root {
+    --card-width:  60px;
+    --card-height: 84px;
+  }
+  #game-title { font-size: 1rem; }
+  .toolbar-btn { padding: 4px 8px; font-size: 0.7rem; }
+  #toolbar-center { gap: 10px; }
+  #game-board { padding: 10px 8px; gap: 10px; }
+  #stock-area, #foundation-area, #tableau-area { gap: 6px; }
+  .card-center { font-size: 1.4rem; }
+  .card-corner-top, .card-corner-bottom { font-size: 0.7rem; }
+}
+
+@media (max-width: 520px) {
+  :root {
+    --card-width:  46px;
+    --card-height: 64px;
+  }
+  #toolbar { flex-wrap: wrap; height: auto; padding: 6px 8px; }
+  #toolbar-right { gap: 4px; }
+  .toolbar-btn { padding: 3px 6px; font-size: 0.65rem; }
+  #game-board { padding: 6px 4px; gap: 6px; }
+  #stock-area, #foundation-area, #tableau-area { gap: 4px; }
+  .card .card-back::after { font-size: 1.4rem; }
+}

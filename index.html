@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Klondike Solitaire</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ===== TOP TOOLBAR ===== -->
+  <header id="toolbar">
+    <div id="toolbar-left">
+      <h1 id="game-title">♠ Solitaire</h1>
+    </div>
+    <div id="toolbar-center">
+      <div class="stat-box">
+        <span class="stat-label">TIME</span>
+        <span class="stat-value" id="timer-display">00:00</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-label">MOVES</span>
+        <span class="stat-value" id="move-counter">0</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-label">SCORE</span>
+        <span class="stat-value" id="score-display">0</span>
+      </div>
+    </div>
+    <div id="toolbar-right">
+      <button class="toolbar-btn" id="btn-undo" title="Undo last move">↩ Undo</button>
+      <button class="toolbar-btn" id="btn-hint" title="Show a hint">💡 Hint</button>
+      <button class="toolbar-btn" id="btn-restart" title="Restart this game">↺ Restart</button>
+      <button class="toolbar-btn primary" id="btn-new-game" title="Start a new game">＋ New Game</button>
+    </div>
+  </header>
+
+  <!-- ===== MAIN GAME BOARD ===== -->
+  <main id="game-board">
+
+    <!-- Top Row: Stock, Waste, spacer, and 4 Foundation piles -->
+    <div id="top-row">
+      <div id="stock-area">
+        <!-- Stock pile (face-down draw pile) -->
+        <div class="pile-slot" id="stock" title="Click to draw a card"></div>
+        <!-- Waste pile (drawn cards face up) -->
+        <div class="pile-slot" id="waste"></div>
+      </div>
+      <div id="foundation-area">
+        <!-- Four foundation piles, one per suit -->
+        <div class="pile-slot foundation" id="foundation-0" data-suit="♠" title="Spades foundation"></div>
+        <div class="pile-slot foundation" id="foundation-1" data-suit="♥" title="Hearts foundation"></div>
+        <div class="pile-slot foundation" id="foundation-2" data-suit="♦" title="Diamonds foundation"></div>
+        <div class="pile-slot foundation" id="foundation-3" data-suit="♣" title="Clubs foundation"></div>
+      </div>
+    </div>
+
+    <!-- Tableau: 7 columns of cards -->
+    <div id="tableau-area">
+      <div class="pile-slot tableau-col" id="tableau-0"></div>
+      <div class="pile-slot tableau-col" id="tableau-1"></div>
+      <div class="pile-slot tableau-col" id="tableau-2"></div>
+      <div class="pile-slot tableau-col" id="tableau-3"></div>
+      <div class="pile-slot tableau-col" id="tableau-4"></div>
+      <div class="pile-slot tableau-col" id="tableau-5"></div>
+      <div class="pile-slot tableau-col" id="tableau-6"></div>
+    </div>
+
+  </main>
+
+  <!-- ===== WIN OVERLAY ===== -->
+  <div id="win-overlay" class="hidden">
+    <div id="win-box">
+      <div id="win-suits">♠ ♥ ♦ ♣</div>
+      <h2 id="win-title">You Win!</h2>
+      <p id="win-stats"></p>
+      <div id="win-buttons">
+        <button class="toolbar-btn primary" id="btn-win-new">New Game</button>
+        <button class="toolbar-btn" id="btn-win-restart">Play Again</button>
+      </div>
+    </div>
+    <!-- Falling card confetti will be injected here by JS -->
+    <div id="confetti-container"></div>
+  </div>
+
+  <!-- ===== DRAG GHOST (invisible container used during drag) ===== -->
+  <div id="drag-ghost"></div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
